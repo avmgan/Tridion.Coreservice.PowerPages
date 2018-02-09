@@ -1,0 +1,75 @@
+﻿@model Tridion.Coreservice.PowerPages.ViewModels.PublishViewModel
+@using Tridion.Coreservice.PowerPages.Tridion
+@{
+	ViewBag.Title = "Publish";
+}
+@{
+	this.GetModel<Tridion.Coreservice.PowerPages.ViewModels.PublishViewModel>();
+}
+
+<div class="container">
+	<br /><br />
+	@if (!Model.IsSuccess)
+	{
+		using (Html.BeginForm("Publish", "Home", new { @class = "form" }, FormMethod.Post))
+		{
+			<fieldset>
+				<legend>Publish</legend>
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="form-group">
+							@Html.LabelFor(x => x.FromDateModified, "Date Modified From")
+							<div class="input-group date" data-provide="datepicker">
+								@Html.TextBox("FromDateModified", Model.FromDateModified, new { @class = "required form-control", @data_val_required = "Required field", @type = "date" })
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							@Html.LabelFor(x => x.FromDateModified, "Date Modified To")
+							<div class="input-group date" data-provide="datepicker">
+								@Html.TextBox("FromDateModified", Model.ToDateModified, new { @class = "required form-control", @data_val_required = "Required field", @type = "date" })
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<button type="submit" class="btn btn-primary">Search</button>
+				</div>
+			</fieldset>
+		}
+	}
+	else
+	{
+		if (!Model.IsPublishCompleted)
+		{
+
+			@Html.Raw(string.Format(@"<h4>Search Results for date modified</h4><br/>"))
+
+			if (!Model.ComponentsList.Any())
+			{
+				@Html.Raw("<p><strong>There are no results.</strong></p>")
+			}
+			else
+			{
+				@Html.Raw(string.Format("<p>No of Components found for publish: <strong>{0}</strong></p>", Model.ComponentsList.Count()))
+				foreach (var item in Model.ComponentsList)
+				{
+					@Html.Raw(string.Format("<p>Component Id: {0}, Title: {1}</p>", item.Id, item.Title))
+				}
+
+				using (Html.BeginForm("PublishAll", "Home", new { @class = "form" }, FormMethod.Post))
+				{
+					<button type="submit" class="btn btn-primary">Publish All</button>
+				}
+
+			}
+		}
+		else
+		{
+			<div class="alert alert-success" role="alert">
+				@Html.Raw("<h4 class=\"alert-heading\">Successfully published all the components.</h4>")
+			</div>
+		}
+	}
+</div>

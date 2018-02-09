@@ -1,0 +1,94 @@
+﻿@model Tridion.Coreservice.PowerPages.ViewModels.FindAndReplaceViewModel
+@using Tridion.Coreservice.PowerPages.Tridion
+@{
+    ViewBag.Title = "Home Page";
+}
+@{
+    this.GetModel<Tridion.Coreservice.PowerPages.ViewModels.FindAndReplaceViewModel>();
+}
+
+<div class="container">
+	<br /><br />
+	@if (!Model.IsSuccess)
+	{
+		using (Html.BeginForm("Index", "Home", new { @class = "form" }, FormMethod.Post))
+		{
+			<fieldset>
+				<legend>Find and Replace</legend>
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="form-group">
+							@Html.LabelFor(x => x.SearchText, "Search")
+							@Html.TextBox("SearchText", Model.SearchText, new { @class = "required form-control", @maxlength = "500", @data_val_required = "Search Text Required", @placeholder = "Enter search text" })
+							@*<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>*@
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							@Html.LabelFor(x => x.ReplaceText, "Replace with")
+							@Html.TextBox("ReplaceText", Model.ReplaceText, new { @class = "required form-control", @maxlength = "500", @data_val_required = "Replace Text Required", @placeholder = "Enter repalce text" })
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							@Html.LabelFor(x => x.FolderId, "Folder tcmId")
+							@Html.TextBox("FolderId", Model.FolderId, new { @class = "required form-control", @maxlength = "500", @data_val_required = "FolderId Required", @placeholder = "Enter folderId" })
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-check disabled">
+						<label class="form-check-label">
+							@Html.CheckBoxFor(x => x.Matchcase, new { @class = "form-check-input" })
+							Match case
+						</label>
+					</div>
+					<button type="submit" class="btn btn-primary">Search</button>
+				</div>
+			</fieldset>
+		}
+	}
+	else
+	{
+		if (!Model.IsReplaceCompleted)
+		{
+			@Html.Raw(string.Format(@"<h4>Search Results for &quot;{0}&quot;</h4><br/>", Model.SearchText))
+
+			if (!Model.ComponentIdsMatchedListForFindAndReplace.Any())
+			{
+				@Html.Raw("<p><strong>There are no results.</strong></p>")
+			}
+			else
+			{
+				@Html.Raw(string.Format("<p>No of Components found for replace: <strong>{0}</strong></p>", Model.ComponentIdsMatchedListForFindAndReplace.Count()))
+				foreach (var item in Model.ComponentIdsMatchedListForFindAndReplace)
+				{
+					@Html.Raw(string.Format("<p>Component Id: {0}, Title: {1}</p>", item.Id, item.Title))
+				}
+
+				using (Html.BeginForm("ReplaceAll", "Home", new { @class = "form" }, FormMethod.Post))
+				{
+					<button type="submit" class="btn btn-primary">Replace All</button>
+				}
+
+			}
+		}
+		else
+		{
+			if (!Model.ComponentIdsNotReplaced.Any())
+			{
+				<div class="alert alert-success" role="alert">
+					@Html.Raw("<h4 class=\"alert-heading\">Successfully replaced all the components.</h4>")
+				</div>
+			}
+			else
+			{
+				@Html.Raw(string.Format("<p>The following components not replaced: <strong>{0}</strong></p>", Model.ComponentIdsNotReplaced.Count()))
+				foreach (var item in Model.ComponentIdsNotReplaced)
+				{
+					@Html.Raw(string.Format("<p>Component Id: {0}, Title: {1}</p>", item.Id, item.Title))
+				}
+			}
+		}
+	}
+</div>

@@ -1,0 +1,4 @@
+﻿<ul class="nav nav-tabs">
+    <li role="presentation" class="@(Request.RawUrl.StartsWith("/Home/Index") || (Request.RawUrl.StartsWith("/") && !Request.RawUrl.Contains("Home")) ?"active":"")">@Html.ActionLink("Find and Replace", "Index", "Home")</li>
+    <li role="presentation" class="@(Request.RawUrl.StartsWith("/Home/Publish")?"active":"")">@Html.ActionLink("Publish", "Publish", "Home")</li>
+</ul>
