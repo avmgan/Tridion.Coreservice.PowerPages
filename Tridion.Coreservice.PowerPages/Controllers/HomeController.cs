@@ -20,7 +20,7 @@ namespace Tridion.Coreservice.PowerPages.Controllers
         {
             get
             {
-                return CoreService.GetClient("localhost:7086", "vdev-p6x92e38\\vagrant", "vagrant", false);
+                return CoreService.GetClient("localhost:7086", "username", "password", false);
             }
         }
 
