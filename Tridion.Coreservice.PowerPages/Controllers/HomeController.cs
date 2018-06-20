@@ -20,7 +20,7 @@ namespace Tridion.Coreservice.PowerPages.Controllers
         {
             get
             {
-                return CoreService.GetClient("localhost:7086", "username", "password", false);
+                return CoreService.GetClient("cms.local", "username", "password", false);
             }
         }
 
